@@ -17,7 +17,7 @@ function render(
     }),
     session = null,
     ...renderOptions
-  } = {}
+  } = {},
 ) {
   function Wrapper({ children }: { children: React.ReactNode }) {
     return (

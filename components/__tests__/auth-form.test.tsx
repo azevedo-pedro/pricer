@@ -22,6 +22,16 @@ describe("AuthForm", () => {
     expect(await screen.findByText(/senha é obrigatório/i)).toBeInTheDocument();
   });
 
+  it("should has a disabled button", async () => {
+    const submit = jest.fn();
+
+    render(<AuthForm onSubmit={submit} disabled />);
+
+    expect(
+      screen.getByRole("button", { name: /Loading.../i }),
+    ).toBeInTheDocument();
+  });
+
   it("submits form with valid data", async () => {
     const submit = jest.fn();
 
@@ -29,7 +39,7 @@ describe("AuthForm", () => {
 
     await user.type(
       screen.getByPlaceholderText(/E-mail*/i),
-      "test@example.com"
+      "test@example.com",
     );
     await user.type(screen.getByPlaceholderText(/senha/i), "password123");
     await user.click(screen.getByRole("button", { name: /entrar/i }));
