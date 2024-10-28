@@ -19,7 +19,7 @@ const formSchema = z.object({
   password: z
     .string()
     .min(1, { message: "Senha é obrigatório" })
-    .min(4, { message: "Senha tem que haver pelo menos 6 caracteres" }),
+    .min(4, { message: "Senha tem que haver pelo menos 4 caracteres" }),
 });
 
 type FormValues = {
@@ -37,6 +37,7 @@ export type LoginFormData = z.infer<typeof formSchema>;
 export function AuthForm({
   defaultValues = { email: "", password: "" },
   onSubmit,
+  disabled,
 }: Props) {
   const form = useForm<LoginFormData>({
     resolver: zodResolver(formSchema),
@@ -82,7 +83,9 @@ export function AuthForm({
             </FormItem>
           )}
         />
-        <Button className="w-full">Entrar</Button>
+        <Button disabled={disabled} className="w-full">
+          {disabled ? "Loading..." : "Entrar"}
+        </Button>
       </form>
     </Form>
   );

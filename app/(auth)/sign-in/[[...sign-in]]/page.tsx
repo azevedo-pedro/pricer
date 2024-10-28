@@ -1,16 +1,14 @@
 "use client";
 import { AuthForm, LoginFormData } from "@/components/auth-form";
 import Image from "next/image";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useMutation } from "@tanstack/react-query";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { nextOptions } from "@/lib/next-config";
-import { getServerSession } from "next-auth";
+import { toast } from "sonner";
 
 export default function SignInPage() {
-  const session = getServerSession(nextOptions);
-
+  const { status } = useSession();
   const router = useRouter();
   const loginMutation = useMutation({
     mutationFn: async (data: LoginFormData) => {
@@ -29,17 +27,20 @@ export default function SignInPage() {
       router.push("/");
       router.refresh();
     },
+    onError: () => {
+      toast.error("Falha ao fazer login");
+    },
   });
 
   const onSubmit = (data: LoginFormData) => {
     loginMutation.mutate(data);
   };
-
   useEffect(() => {
-    if (!!session) {
-      redirect("/");
+    if (status === "authenticated") {
+      router.push("/");
+      router.refresh();
     }
-  }, [session]);
+  }, [status]);
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
@@ -54,7 +55,7 @@ export default function SignInPage() {
       <div className="h-full flex flex-col lg:items-center justify-center px-4">
         <div className="text-left space-y-2.5 lg:w-full lg:max-w-[608px]">
           <h3 className="font-bold size-6 text-[#2E2A47]">Login</h3>
-          <AuthForm onSubmit={onSubmit} />
+          <AuthForm onSubmit={onSubmit} disabled={loginMutation.isPending} />
         </div>
       </div>
     </div>

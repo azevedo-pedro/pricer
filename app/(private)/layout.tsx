@@ -1,17 +1,19 @@
-import { getServerSession } from "next-auth";
+"use client";
 import { ReactNode } from "react";
 
 import { redirect } from "next/navigation";
-import { nextOptions } from "@/lib/next-config";
+import { useSession } from "next-auth/react";
 
 interface PrivateLayoutProps {
   children: ReactNode;
 }
 
-export default async function PrivateLayout({ children }: PrivateLayoutProps) {
-  const session = await getServerSession(nextOptions);
-  if (!session) {
+export default function PrivateLayout({ children }: PrivateLayoutProps) {
+  const { status } = useSession();
+
+  if (status === "unauthenticated") {
     redirect("/sign-in");
   }
+
   return <>{children}</>;
 }
