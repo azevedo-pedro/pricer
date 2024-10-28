@@ -1,13 +1,25 @@
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
+const formSchema = z.object({
+  email: z
+    .string()
+    .min(1, { message: "Email é obrigatório" })
+    .email({ message: "Precisa ser um email valido" }),
+  password: z
+    .string()
+    .min(1, { message: "Senha é obrigatório" })
+    .min(4, { message: "Senha tem que haver pelo menos 6 caracteres" }),
 });
 
 type FormValues = {
@@ -20,14 +32,14 @@ type Props = {
   onSubmit: (values: FormValues) => void;
   disabled?: boolean;
 };
-export type LoginFormData = z.infer<typeof loginSchema>;
+export type LoginFormData = z.infer<typeof formSchema>;
 
 export function AuthForm({
   defaultValues = { email: "", password: "" },
   onSubmit,
 }: Props) {
   const form = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(formSchema),
     defaultValues: defaultValues,
   });
   const handleSubmit = (values: FormValues) => {
@@ -49,6 +61,7 @@ export function AuthForm({
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -65,6 +78,7 @@ export function AuthForm({
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
