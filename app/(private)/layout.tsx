@@ -1,7 +1,8 @@
 import { getServerSession } from "next-auth";
 import { ReactNode } from "react";
-import { nextOptions } from "../api/auth/[...nextauth]/route";
+
 import { redirect } from "next/navigation";
+import { nextOptions } from "@/lib/next-config";
 
 interface PrivateLayoutProps {
   children: ReactNode;
