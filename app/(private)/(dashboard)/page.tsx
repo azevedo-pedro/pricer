@@ -1,16 +1,16 @@
 "use client";
-import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Trash } from "lucide-react";
 
 export default function DashboardPage() {
   return (
-    <div className="min-h-screen grid grid-cols-1 ">
-      <div className="h-full bg-[#37776C] lg:flex items-center justify-center">
-        <Image
-          src="/logo.svg"
-          height={100}
-          width={256}
-          alt="Logo Options & Company"
-        />
+    <div className="min-h-screen">
+      <div className="bg-[#D0D0D0] w-full h-[60px] flex items-center px-5">
+        <Button>+ Cotação</Button>
+        <Button variant="secondary" className="mx-5">
+          <Trash />
+          Excluir
+        </Button>
       </div>
     </div>
   );

@@ -3,9 +3,14 @@ import { AuthForm, LoginFormData } from "@/components/auth-form";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { nextOptions } from "@/lib/next-config";
+import { getServerSession } from "next-auth";
 
 export default function SignInPage() {
+  const session = getServerSession(nextOptions);
+
   const router = useRouter();
   const loginMutation = useMutation({
     mutationFn: async (data: LoginFormData) => {
@@ -29,6 +34,13 @@ export default function SignInPage() {
   const onSubmit = (data: LoginFormData) => {
     loginMutation.mutate(data);
   };
+
+  useEffect(() => {
+    if (!!session) {
+      redirect("/");
+    }
+  }, [session]);
+
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
       <div className="h-full bg-[#37776C] hidden lg:flex items-center justify-center">

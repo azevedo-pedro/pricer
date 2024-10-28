@@ -82,7 +82,7 @@ export function AuthForm({
             </FormItem>
           )}
         />
-        <Button className="w-full bg-[#37776C]">Entrar</Button>
+        <Button className="w-full">Entrar</Button>
       </form>
     </Form>
   );
