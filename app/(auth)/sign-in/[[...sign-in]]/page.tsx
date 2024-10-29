@@ -40,7 +40,7 @@ export default function SignInPage() {
       router.push("/");
       router.refresh();
     }
-  }, [status]);
+  }, [router, status]);
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">

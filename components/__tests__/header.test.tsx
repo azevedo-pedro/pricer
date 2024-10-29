@@ -4,10 +4,6 @@ import "@testing-library/jest-dom";
 import { Header } from "@/components/header";
 
 // Mock the Image and UserButton components
-jest.mock("next/image", () => ({
-  __esModule: true,
-  default: (props: any) => <img {...props} />, // Simple mock for Image component
-}));
 
 jest.mock("../user-button", () => ({
   UserButton: () => <button>User Button</button>, // Mock for UserButton component

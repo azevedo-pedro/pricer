@@ -1,5 +1,4 @@
-// __tests__/components/UserButton.test.tsx
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useSession, signOut } from "next-auth/react";
 import { UserButton } from "@/components/user-button";
