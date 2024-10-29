@@ -15,6 +15,13 @@ import { signOut, useSession } from "next-auth/react";
 
 export function UserButton() {
   const { data: profile, status } = useSession();
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error("Failed to sign out:", error);
+    }
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -49,7 +56,7 @@ export function UserButton() {
           <span>Suporte</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()}>
+        <DropdownMenuItem onClick={handleSignOut}>
           <LogOut />
           <span>Sair</span>
         </DropdownMenuItem>

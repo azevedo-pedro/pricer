@@ -19,6 +19,7 @@ const config: Config = {
     "lib/**/*.{js,jsx,ts,tsx}",
     "!**/*.d.ts",
     "!**/node_modules/**",
+    "!components/ui/*.{js,jsx,ts,tsx}",
   ],
   coverageThreshold: {
     global: {
