@@ -28,11 +28,15 @@ describe("API Integration", () => {
 
   it("should make authenticated requests when session exists", async () => {
     (getSession as jest.Mock).mockResolvedValueOnce(mockSession);
-    nock(API_URL).options("/users/me").reply(200, null, {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET,OPTIONS",
-      "Access-Control-Allow-Headers": "Authorization",
-    });
+    nock(API_URL).options("/users/me").reply(
+      200,
+      {},
+      {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,OPTIONS",
+        "Access-Control-Allow-Headers": "Authorization",
+      }
+    );
     nock(API_URL)
       .get("/users/me")
       .matchHeader("Authorization", `Bearer ${mockSession.accessToken}`)
@@ -50,11 +54,15 @@ describe("API Integration", () => {
 
   it("should make unauthenticated requests when no session exists", async () => {
     (getSession as jest.Mock).mockResolvedValueOnce(null);
-    nock(API_URL).options("/users/me").reply(200, null, {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET,OPTIONS",
-      "Access-Control-Allow-Headers": "Authorization",
-    });
+    nock(API_URL).options("/users/me").reply(
+      200,
+      {},
+      {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,OPTIONS",
+        "Access-Control-Allow-Headers": "Authorization",
+      }
+    );
     nock(API_URL).get("/users/me").reply(
       200,
       { data: "test" },
@@ -69,11 +77,15 @@ describe("API Integration", () => {
 
   it("should handle API errors correctly", async () => {
     (getSession as jest.Mock).mockResolvedValueOnce(mockSession);
-    nock(API_URL).options("/users/me").reply(200, null, {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET,OPTIONS",
-      "Access-Control-Allow-Headers": "Authorization",
-    });
+    nock(API_URL).options("/users/me").reply(
+      200,
+      {},
+      {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,OPTIONS",
+        "Access-Control-Allow-Headers": "Authorization",
+      }
+    );
     nock(API_URL).get("/error").reply(
       500,
       { error: "Server Error" },
