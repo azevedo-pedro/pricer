@@ -35,7 +35,7 @@ describe("API Integration", () => {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,OPTIONS",
         "Access-Control-Allow-Headers": "Authorization",
-      }
+      },
     );
     nock(API_URL)
       .get("/users/me")
@@ -45,7 +45,7 @@ describe("API Integration", () => {
         { data: "test" },
         {
           "Access-Control-Allow-Origin": "*",
-        }
+        },
       );
 
     const response = await api.get("/users/me");
@@ -61,14 +61,14 @@ describe("API Integration", () => {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,OPTIONS",
         "Access-Control-Allow-Headers": "Authorization",
-      }
+      },
     );
     nock(API_URL).get("/users/me").reply(
       200,
       { data: "test" },
       {
         "Access-Control-Allow-Origin": "*",
-      }
+      },
     );
 
     const response = await api.get("/users/me");
@@ -84,14 +84,14 @@ describe("API Integration", () => {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET,OPTIONS",
         "Access-Control-Allow-Headers": "Authorization",
-      }
+      },
     );
     nock(API_URL).get("/error").reply(
       500,
       { error: "Server Error" },
       {
         "Access-Control-Allow-Origin": "*",
-      }
+      },
     );
 
     await expect(api.get("/error")).rejects.toThrow();
