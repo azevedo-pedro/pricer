@@ -2,7 +2,6 @@
 
 A clean and modern admin dashboard built with Next.js 14+ and Tailwind CSS, featuring a secure login page and internal dashboard view.
 
-
 ## Features
 
 - 🔐 Secure authentication system
@@ -24,12 +23,14 @@ A clean and modern admin dashboard built with Next.js 14+ and Tailwind CSS, feat
 ## Getting Started
 
 1. Clone the repository:
+
 ```bash
 git clone git@github.com:azevedo-pedro/pricer.git
 cd pricer
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 
@@ -39,11 +40,13 @@ yarn install
 ```
 
 3. Set up environment variables:
+
 ```bash
 cp .env.example .env.local
 ```
 
 4. Start the development server:
+
 ```bash
 npm run dev
 
@@ -122,32 +125,31 @@ pricer
 └── yarn.lock
 ```
 
-
 ## Authentication
 
 This project uses Next-Auth.js for authentication. Configure your auth providers in `pages/api/auth/[...nextauth].ts`:
 
 ```typescript
-import NextAuth from 'next-auth'
-import Credentials from 'next-auth/providers/credentials'
+import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
 
 export default NextAuth({
   providers: [
     Credentials({
-      name: 'Credentials',
+      name: "Credentials",
       credentials: {
         username: { label: "Username", type: "text" },
-        password: { label: "Password", type: "password" }
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         // Add your authentication logic here
-      }
-    })
+      },
+    }),
   ],
   pages: {
-    signIn: '/login',
+    signIn: "/login",
   },
-})
+});
 ```
 
 ## Styling
@@ -156,28 +158,26 @@ The project uses Tailwind CSS for styling. Key color schemes can be customized i
 
 ```javascript
 module.exports = {
-  content: [
-    './src/**/*.{js,ts,jsx,tsx}',
-  ],
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#156D5C',
+          DEFAULT: "#156D5C",
           // Add your color palette
-        }
-      }
-    }
+        },
+      },
+    },
   },
   plugins: [],
-}
+};
 ```
 
 ## Development
 
 ### Prerequisites
 
-- Node.js 20+ 
+- Node.js 20+
 - npm or yarn
 - Git
 
@@ -194,12 +194,14 @@ module.exports = {
 The application can be deployed to various platforms:
 
 ### Vercel (Recommended)
+
 ```bash
 npm i -g vercel
 vercel
 ```
 
 ### Docker
+
 ```bash
 docker build -t admin-dashboard .
 docker run -p 3000:3000 admin-dashboard
