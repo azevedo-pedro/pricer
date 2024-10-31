@@ -2,6 +2,7 @@
 import { ReactNode } from "react";
 
 import { redirect } from "next/navigation";
+import { Header } from "@/components/header";
 import { useSession } from "next-auth/react";
 
 interface PrivateLayoutProps {
@@ -15,5 +16,10 @@ export default function PrivateLayout({ children }: PrivateLayoutProps) {
     redirect("/sign-in");
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <Header />
+      <main>{children}</main>
+    </>
+  );
 }
