@@ -11,11 +11,15 @@ import {
   FormLabel,
   FormField,
   FormItem,
+  FormMessage,
 } from "@/components/ui/form";
 
 const formSchema = z.object({
-  ticker: z.string(),
-  qtd: z.string(),
+  ticker: z
+    .string()
+    .min(1, { message: "Esse campo é obrigátorio" })
+    .toUpperCase(),
+  qtd: z.string().min(2, { message: "Esse campo é obrigátorio" }),
 });
 
 type FormValues = z.input<typeof formSchema>;
@@ -38,6 +42,7 @@ export function PriceForm({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues,
+    mode: "onChange",
   });
   const handleSubmit = (values: FormValues) => {
     onSubmit(values);
@@ -64,6 +69,7 @@ export function PriceForm({
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -76,15 +82,18 @@ export function PriceForm({
               <FormControl>
                 <Input disabled={disabled} placeholder="Ex. 100." {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
         <Button
           style={{ marginTop: "10px" }}
           className="w-full"
-          disabled={disabled}
+          disabled={
+            !!(form.formState.errors["ticker"] && form.formState.errors["qtd"])
+          }
         >
-          {id ? "Save Changes" : "Criar Ativo"}
+          {id ? "Salvar Alterações" : "Criar Ativo"}
         </Button>
         {!!id && (
           <Button
@@ -95,7 +104,7 @@ export function PriceForm({
             variant="outline"
           >
             <Trash />
-            Delete Account
+            Deletar Ativo
           </Button>
         )}
       </form>

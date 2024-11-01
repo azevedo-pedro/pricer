@@ -130,6 +130,19 @@ export const columns: ColumnDef<ResponseType>[] = [
     },
   },
   {
+    accessorKey: "compra",
+    header: ({ column }) => {
+      return (
+        <div
+          className="text-center font-medium text-black"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Melhor compra
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: "venda",
     header: ({ column }) => {
       return (

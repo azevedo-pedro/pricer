@@ -26,6 +26,7 @@ import { CardHeader } from "@/components/ui/card";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Plus, Trash } from "lucide-react";
+import { useDeletePrice } from "@/features/price/api/use-delete-price";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -43,7 +44,7 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
-
+  const deletePrices = useDeletePrice();
   const table = useReactTable({
     data,
     columns,
@@ -62,7 +63,7 @@ export function DataTable<TData, TValue>({
   });
   const onDelete = (row) => {
     const ids = row.map((r) => r.original.id);
-    // deleteAccounts.mutate({ ids });
+    deletePrices.mutate(ids);
   };
 
   return (
@@ -76,11 +77,8 @@ export function DataTable<TData, TValue>({
           variant="secondary"
           className="font-normal ml-2"
           onClick={async () => {
-            const ok = await confirm();
-            if (ok) {
-              onDelete(table.getFilteredSelectedRowModel().rows);
-              table.resetRowSelection();
-            }
+            onDelete(table.getFilteredSelectedRowModel().rows);
+            table.resetRowSelection();
           }}
         >
           <Trash className="size-4 mr-2" />

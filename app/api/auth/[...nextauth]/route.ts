@@ -6,7 +6,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { api } from "@/lib/api";
 
 const nextOptions: NextAuthOptions = {
-  debug: true,
   providers: [
     CredentialsProvider({
       id: "credentials",

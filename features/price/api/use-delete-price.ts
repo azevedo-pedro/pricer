@@ -1,18 +1,18 @@
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateTicker } from "./api";
+import { deleteTickers } from "./api";
 
-export const useEditPrice = () => {
+export const useDeletePrice = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: updateTicker,
+    mutationFn: async (ids: string[]) => await deleteTickers(ids),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["prices"] });
+      toast.success("Ativo deletedo");
     },
-    onError: (error) => {
-      console.log(error);
-      toast.error("Falha ao Atualizar o ativo");
+    onError: () => {
+      toast.error("Falha ao deletar o ativo");
     },
   });
   return mutation;

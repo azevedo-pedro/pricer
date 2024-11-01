@@ -4,38 +4,39 @@ import { DataTable } from "@/components/data-table";
 import { Card, CardContent } from "@/components/ui/card";
 import { columns } from "./columns";
 import { useNewPrice } from "@/features/price/hooks/use-new-price";
+import { useGetPrices } from "@/features/price/api/use-get-price";
+import useWebSocket from "react-use-websocket";
+import { useEffect } from "react";
+import { useEditPrice } from "@/features/price/api/use-edit-price";
 
 export default function DashboardPage() {
-  const newPrice = useNewPrice();
+  const { sendMessage, lastJsonMessage } = useWebSocket(
+    "ws://35.222.114.197:8765",
+    { onClose: () => console.log("connection close") }
+  );
 
-  const prices = [
-    {
-      ticker: "PETR3",
-      preco: "R$ 44.12",
-      quantidade: 4000,
-      preco_abertura: "R$ 45.19",
-      ibov: "1.546%",
-      variacao: "1.26%",
-      variacao_12m: "-14.39%",
-      lote_minimo: 100,
-      compra: "R$ 42.15",
-      venda: "R$ 45.19",
-      total_price: "R$ 172,720.00",
-    },
-    {
-      ticker: "HYPE3",
-      preco: "R$ 39.09",
-      quantidade: 900,
-      preco_abertura: "R$ 35.33",
-      ibov: "0.525%",
-      variacao: "2.89%",
-      variacao_12m: "-14.15%",
-      lote_minimo: 100,
-      compra: "R$ 34.42",
-      venda: "R$ 39.22",
-      total_price: "R$ 35,854.00",
-    },
-  ];
+  const newPrice = useNewPrice();
+  const prices = useGetPrices();
+  const editMutation = useEditPrice();
+  const pricesData = prices.data || [];
+  useEffect(() => {
+    if (lastJsonMessage !== null) {
+      const existingTickerIndex = pricesData.findIndex(
+        (t) => t.ticker === lastJsonMessage?.ticker
+      );
+      if (existingTickerIndex === -1) {
+        return;
+      }
+      editMutation.mutate(lastJsonMessage);
+    }
+  }, [lastJsonMessage]);
+
+  useEffect(() => {
+    prices.data?.forEach((ticker) =>
+      sendMessage(`sqt ${ticker.ticker}`, false)
+    );
+  }, [prices.data?.length]);
+
   return (
     <div className="min-h-screen">
       <Card className="border-none w-full">
@@ -43,7 +44,7 @@ export default function DashboardPage() {
           <DataTable
             filterKey="name"
             columns={columns}
-            data={prices}
+            data={pricesData}
             disabled={false}
             onOpen={newPrice.onOpen}
           />

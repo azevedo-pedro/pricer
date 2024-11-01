@@ -2,10 +2,18 @@ import { z } from "zod";
 import { createId } from "@paralleldrive/cuid2";
 
 // Define the ticker schema and type
-const tickerSchema = z.object({
+export const tickerSchema = z.object({
   ticker: z.string(),
   qtd: z.string(),
-  id: z.string(),
+  id: z.string().optional(),
+  compra: z.string().optional(),
+  lote_minimo: z.string().optional(),
+  preco: z.string().optional(),
+  preco_abertura: z.string().optional(),
+  variacao: z.string().optional(),
+  variacao_12m: z.string().optional(),
+  venda: z.string().optional(),
+  total_price: z.string().optional(),
 });
 
 export type TickerProps = z.input<typeof tickerSchema>;
@@ -59,13 +67,53 @@ export const updateTicker = async (
     : [];
 
   // Find index of the ticker with the provided id
-  const existingTickerIndex = tickers.findIndex((t) => t.id === ticker.id);
+  const existingTickerIndex = tickers.findIndex(
+    (t) => t.ticker === ticker.ticker
+  );
   if (existingTickerIndex === -1) {
     throw new Error(`Ticker with id "${ticker.id}" does not exist.`);
   }
-
+  const formaterCurrency = (currency: number) => {
+    const formatedCurrency = new Intl.NumberFormat("pt-BR", {
+      maximumSignificantDigits: 4,
+    }).format(currency);
+    return `R$ ${formatedCurrency}`;
+  };
+  const formaterPerCent = (currency: number) => {
+    const formatedCurrency = new Intl.NumberFormat("pt-BR", {
+      maximumSignificantDigits: 4,
+    }).format(currency);
+    return `${formatedCurrency} %`;
+  };
   // Update the existing ticker
-  tickers[existingTickerIndex] = { ...tickers[existingTickerIndex], ...ticker };
+  const tratedTicker: TickerProps = {
+    ...ticker,
+    compra: formaterCurrency(Number(ticker.compra)),
+    venda: formaterCurrency(Number(ticker.compra)),
+    preco: formaterCurrency(Number(ticker.compra)),
+    preco_abertura: formaterCurrency(Number(ticker.preco_abertura)),
+    variacao: formaterPerCent(Number(ticker.variacao)),
+    variacao_12m: formaterPerCent(Number(ticker.variacao_12m)),
+    total_price: formaterCurrency(
+      Number(ticker.preco) * Number(tickers[existingTickerIndex].qtd)
+    ),
+  };
+  tickers[existingTickerIndex] = {
+    ...tickers[existingTickerIndex],
+    ...tratedTicker,
+  };
   localStorage.setItem("tickers", JSON.stringify(tickers));
   return ticker;
+};
+
+export const deleteTickers = async (
+  tickerNames: string[]
+): Promise<TickerProps[]> => {
+  const storedTickers = localStorage.getItem("tickers");
+  const tickers: TickerProps[] = storedTickers ? JSON.parse(storedTickers) : [];
+
+  const updatedTickers = tickers.filter((t) => !tickerNames.includes(t.id));
+
+  localStorage.setItem("tickers", JSON.stringify(updatedTickers));
+  return updatedTickers;
 };

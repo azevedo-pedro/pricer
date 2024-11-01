@@ -14,7 +14,7 @@ export function NewPriceSheet() {
   const { isOpen, onClose } = useNewPrice();
   const mutation = useCreatePrice();
   const onSubmit = (values: TickerProps) => {
-    const toUpper = values.ticker.toUpperCase();
+    const toUpper = values.ticker.toUpperCase().trim();
     mutation.mutate(
       { ...values, ticker: toUpper },
       {
