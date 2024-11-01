@@ -8,9 +8,10 @@ import { useGetPrices } from "@/features/price/api/use-get-price";
 import useWebSocket from "react-use-websocket";
 import { useEffect } from "react";
 import { useEditPrice } from "@/features/price/api/use-edit-price";
+import { TickerProps } from "@/features/price/api/api";
 
 export default function DashboardPage() {
-  const { sendMessage, lastJsonMessage } = useWebSocket(
+  const { sendMessage, lastJsonMessage } = useWebSocket<TickerProps>(
     "ws://35.222.114.197:8765",
     { onClose: () => console.log("connection close") }
   );
