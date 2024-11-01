@@ -2,6 +2,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { TickerProps } from "@/features/price/api/api";
 import { ColumnDef } from "@tanstack/react-table";
+import { Actions } from "./actions";
 
 export type ResponseType = TickerProps;
 export const columns: ColumnDef<ResponseType>[] = [
@@ -169,5 +170,9 @@ export const columns: ColumnDef<ResponseType>[] = [
         </div>
       );
     },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <Actions id={row.original.id || ""} />,
   },
 ];

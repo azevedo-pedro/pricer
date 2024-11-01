@@ -9,7 +9,7 @@ export const useDeletePrice = () => {
     mutationFn: async (ids: string[] | null) => await deleteTickers(ids),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["prices"] });
-      toast.success("Ativo deletedo");
+      toast.success("Ativo deletado");
     },
     onError: () => {
       toast.error("Falha ao deletar o ativo");

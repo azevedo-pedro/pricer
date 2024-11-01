@@ -25,7 +25,7 @@ const formSchema = z.object({
 type FormValues = z.input<typeof formSchema>;
 
 type Props = {
-  id?: string;
+  id?: string | null;
   defaultValues?: FormValues;
   onSubmit: (values: FormValues) => void;
   onDelete?: () => void;
@@ -64,7 +64,7 @@ export function PriceForm({
               <FormLabel>Ativo</FormLabel>
               <FormControl>
                 <Input
-                  disabled={disabled}
+                  disabled={!!id || disabled}
                   placeholder="Ex. VALE3, PRIO3, HYPE3."
                   {...field}
                 />

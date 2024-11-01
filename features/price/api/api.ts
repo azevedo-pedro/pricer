@@ -119,3 +119,13 @@ export const deleteTickers = async (
   localStorage.setItem("tickers", JSON.stringify(updatedTickers));
   return updatedTickers;
 };
+
+export const getTickerById = async (id: string | null) => {
+  const storedTickers = localStorage.getItem("tickers");
+  const tickers: TickerProps[] = storedTickers
+    ? (JSON.parse(storedTickers) as TickerProps[])
+    : [];
+
+  const tickerId = tickers.filter((t) => t.id?.includes(id || ""));
+  return tickerId[0];
+};
