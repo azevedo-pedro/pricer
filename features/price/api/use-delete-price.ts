@@ -6,7 +6,7 @@ export const useDeletePrice = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (ids: string[]) => await deleteTickers(ids),
+    mutationFn: async (ids: string[] | null) => await deleteTickers(ids),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["prices"] });
       toast.success("Ativo deletedo");

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import {
@@ -61,7 +62,7 @@ export function DataTable<TData, TValue>({
       rowSelection,
     },
   });
-  const onDelete = (row) => {
+  const onDelete = (row: any[]) => {
     const ids = row.map((r) => r.original.id);
     deletePrices.mutate(ids);
   };
@@ -145,7 +146,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Sem Resultados.
                 </TableCell>
               </TableRow>
             )}

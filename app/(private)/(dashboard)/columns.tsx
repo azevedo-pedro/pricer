@@ -1,7 +1,9 @@
 "use client";
 import { Checkbox } from "@/components/ui/checkbox";
+import { TickerProps } from "@/features/price/api/api";
 import { ColumnDef } from "@tanstack/react-table";
 
+export type ResponseType = TickerProps;
 export const columns: ColumnDef<ResponseType>[] = [
   {
     id: "select",

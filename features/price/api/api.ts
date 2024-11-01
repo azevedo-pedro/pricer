@@ -107,12 +107,14 @@ export const updateTicker = async (
 };
 
 export const deleteTickers = async (
-  tickerNames: string[]
+  tickerNames: string[] | null
 ): Promise<TickerProps[]> => {
   const storedTickers = localStorage.getItem("tickers");
   const tickers: TickerProps[] = storedTickers ? JSON.parse(storedTickers) : [];
 
-  const updatedTickers = tickers.filter((t) => !tickerNames.includes(t.id));
+  const updatedTickers = tickers.filter(
+    (t) => !tickerNames?.includes(t.id || "")
+  );
 
   localStorage.setItem("tickers", JSON.stringify(updatedTickers));
   return updatedTickers;
