@@ -71,21 +71,20 @@ export function DataTable<TData, TValue>({
           <Plus />
           Cotação
         </Button>
-        {table.getFilteredSelectedRowModel().rows.length > 0 && (
-          <Button
-            variant="secondary"
-            className="font-normal ml-2 text-base"
-            onClick={async () => {
-              onDelete(table.getFilteredSelectedRowModel().rows);
-              table.resetRowSelection();
-            }}
-          >
-            <Trash className="size-4 mr-2" />
-            Excluir{" "}
-            {table.getFilteredSelectedRowModel().rows.length > 0 &&
-              `(${table.getFilteredSelectedRowModel().rows.length})`}
-          </Button>
-        )}
+        <Button
+          variant="secondary"
+          className="font-normal ml-2 text-base"
+          disabled={!(table.getFilteredSelectedRowModel().rows.length > 0)}
+          onClick={async () => {
+            onDelete(table.getFilteredSelectedRowModel().rows);
+            table.resetRowSelection();
+          }}
+        >
+          <Trash className="size-4 mr-2" />
+          Excluir{" "}
+          {table.getFilteredSelectedRowModel().rows.length > 0 &&
+            `(${table.getFilteredSelectedRowModel().rows.length})`}
+        </Button>
       </CardHeader>
       <div className="rounded-md border">
         <Table className="table-auto">
@@ -95,13 +94,13 @@ export function DataTable<TData, TValue>({
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className="bg-[#E3E3E3] text-center border-l border-[#D0D0D0] pl-0"
+                    className="bg-[#E3E3E3] text-center border-l border-[#D0D0D0] min-w-[70px]"
                   >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -119,11 +118,11 @@ export function DataTable<TData, TValue>({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className="border-l border-[#D0D0D0] pl-0 min-w-11 text-base font-normal"
+                      className="border-l border-[#D0D0D0] min-w-[70px] text-base font-normal"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

@@ -171,7 +171,7 @@ describe("UserButton", () => {
         "text-white",
         "text-base",
         "ml-2",
-        "leading-5"
+        "leading-5",
       );
     });
   });

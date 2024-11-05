@@ -57,7 +57,7 @@ export const addTicker = async (ticker: TickerProps): Promise<TickerProps> => {
 
 // Update an existing ticker in localStorage
 export const updateTicker = async (
-  ticker: TickerProps
+  ticker: TickerProps,
 ): Promise<TickerProps> => {
   const storedTickers = localStorage.getItem("tickers");
   const tickers: TickerProps[] = storedTickers
@@ -66,7 +66,7 @@ export const updateTicker = async (
 
   // Find index of the ticker with the provided id
   const existingTickerIndex = tickers.findIndex(
-    (t) => t.ticker === ticker?.ticker
+    (t) => t.ticker === ticker?.ticker,
   );
 
   if (existingTickerIndex === -1) {
@@ -86,20 +86,20 @@ export const updateTicker = async (
   const newTickers = updateObjectsWithSameTicker(
     tickers,
     ticker.ticker,
-    ticker
+    ticker,
   );
   localStorage.setItem("tickers", JSON.stringify(newTickers));
   return ticker;
 };
 
 export const deleteTickers = async (
-  tickerNames: string[] | null
+  tickerNames: string[] | null,
 ): Promise<TickerProps[]> => {
   const storedTickers = localStorage.getItem("tickers");
   const tickers: TickerProps[] = storedTickers ? JSON.parse(storedTickers) : [];
 
   const updatedTickers = tickers.filter(
-    (t) => !tickerNames?.includes(t.id || "")
+    (t) => !tickerNames?.includes(t.id || ""),
   );
 
   localStorage.setItem("tickers", JSON.stringify(updatedTickers));
@@ -117,7 +117,7 @@ export const getTickerById = async (id: string | null) => {
 };
 
 export const updateTickerQtd = async (
-  ticker: Pick<TickerProps, "ticker" | "qtd" | "id">
+  ticker: Pick<TickerProps, "ticker" | "qtd" | "id">,
 ): Promise<TickerProps> => {
   const storedTickers = localStorage.getItem("tickers");
   const tickers: TickerProps[] = storedTickers

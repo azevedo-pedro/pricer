@@ -34,7 +34,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
       if (indexData - 1) sendMessage(`sqt ${ticker}`, false);
       return null;
     },
-    [sendMessage, data]
+    [sendMessage, data],
   );
 
   const unsubscribeFromTicker = useCallback(
@@ -43,7 +43,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
       if (indexData.length === 1) sendMessage(`uqt ${ticker}`, false);
       return null;
     },
-    [sendMessage, data]
+    [sendMessage, data],
   );
 
   useEffect(() => {
@@ -62,7 +62,7 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     const uniqueArray = filterUnique(data, "ticker");
     if (lastJsonMessage === null) {
       uniqueArray.forEach(
-        ({ ticker }) => ticker !== "" && sendMessage(`sqt ${ticker}`, false)
+        ({ ticker }) => ticker !== "" && sendMessage(`sqt ${ticker}`, false),
       );
     }
   }, [data, lastJsonMessage, sendMessage, readyState]);
@@ -87,7 +87,7 @@ export const useWebSocketClient = (): WebSocketState => {
   const context = useContext(WebSocketContext);
   if (context === undefined) {
     throw new Error(
-      "useWebSocketClient must be used within a WebSocketProvider"
+      "useWebSocketClient must be used within a WebSocketProvider",
     );
   }
   return context;

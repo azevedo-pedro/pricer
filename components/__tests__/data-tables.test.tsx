@@ -185,7 +185,7 @@ describe("DataTable", () => {
     expect(rows[1]).toHaveClass(
       "even:bg-[#E3E3E3]",
       "odd:bg-[#F7F8F8]",
-      "text-center"
+      "text-center",
     );
   });
 
@@ -199,7 +199,7 @@ describe("DataTable", () => {
         "text-center",
         "border-l",
         "border-[#D0D0D0]",
-        "pl-0"
+        "pl-0",
       );
     });
   });

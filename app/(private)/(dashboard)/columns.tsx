@@ -54,14 +54,14 @@ const EditableTickerCell = ({ getValue, row }) => {
     };
   }, [value]);
   return (
-    <div className="flex items-center justify-center gap-2">
+    <div className="flex items-center justify-center gap-2 min-w-[158px]">
       <input
         value={value}
         disabled={!!row.original.preco}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setValue(e.target.value.toUpperCase())
         }
-        className="w-[120px] text-center px-2 py-1 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-[158px] font-normal text-center text-base px-2 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         autoFocus
         onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
           if (e.key === "Enter") onSave();
@@ -101,13 +101,13 @@ const EditableQtdCell = ({ getValue, row }) => {
   }, [value]);
 
   return (
-    <div className="flex items-center justify-center gap-2">
+    <div className="flex items-center justify-center gap-2 min-w-[158px]">
       <input
         value={value}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setValue(e.target.value.toUpperCase())
         }
-        className="w-[120px] text-center px-2 py-1 text-sm border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-[158px] font-normal text-center px-2 py-1 text-base border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
         onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
           if (e.key === "Enter") onSave();
           if (e.key === "Escape") onCancel();
@@ -156,7 +156,7 @@ export const columns: ColumnDef<ResponseType>[] = [
     header: ({ column }: HeaderProps) => {
       return (
         <div
-          className="text-center font-normal text-black text-base"
+          className="text-center font-normal text-black text-base min-w-[158px]"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Ativo
@@ -184,7 +184,7 @@ export const columns: ColumnDef<ResponseType>[] = [
     header: ({ column }: HeaderProps) => {
       return (
         <div
-          className="text-center font-normal text-black text-base"
+          className="text-center font-normal text-black text-base min-w-[158px]"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Quantidade
@@ -310,7 +310,7 @@ export const columns: ColumnDef<ResponseType>[] = [
     cell: ({ row }) => (
       <div className="font-bold">
         {formaterCurrency(
-          Number(row.getValue("qtd")) * Number(row.getValue("preco"))
+          Number(row.getValue("qtd")) * Number(row.getValue("preco")),
         )}
       </div>
     ),
