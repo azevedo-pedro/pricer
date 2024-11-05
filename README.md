@@ -125,53 +125,6 @@ pricer
 └── yarn.lock
 ```
 
-## Authentication
-
-This project uses Next-Auth.js for authentication. Configure your auth providers in `pages/api/auth/[...nextauth].ts`:
-
-```typescript
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-
-export default NextAuth({
-  providers: [
-    Credentials({
-      name: "Credentials",
-      credentials: {
-        username: { label: "Username", type: "text" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        // Add your authentication logic here
-      },
-    }),
-  ],
-  pages: {
-    signIn: "/login",
-  },
-});
-```
-
-## Styling
-
-The project uses Tailwind CSS for styling. Key color schemes can be customized in `tailwind.config.js`:
-
-```javascript
-module.exports = {
-  content: ["./src/**/*.{js,ts,jsx,tsx}"],
-  theme: {
-    extend: {
-      colors: {
-        primary: {
-          DEFAULT: "#156D5C",
-          // Add your color palette
-        },
-      },
-    },
-  },
-  plugins: [],
-};
-```
 
 ## Development
 
@@ -188,24 +141,7 @@ module.exports = {
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
 - `npm run test` - Run tests
-
-## Deployment
-
-The application can be deployed to various platforms:
-
-### Vercel (Recommended)
-
-```bash
-npm i -g vercel
-vercel
-```
-
-### Docker
-
-```bash
-docker build -t admin-dashboard .
-docker run -p 3000:3000 admin-dashboard
-```
+:
 
 ## Contributing
 

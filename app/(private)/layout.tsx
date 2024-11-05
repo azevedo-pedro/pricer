@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { Header } from "@/components/header";
 import { useSession } from "next-auth/react";
+import { WebSocketProvider } from "@/providers/websocket-provider";
 
 interface PrivateLayoutProps {
   children: ReactNode;
@@ -19,7 +20,9 @@ export default function PrivateLayout({ children }: PrivateLayoutProps) {
   return (
     <>
       <Header />
-      <main>{children}</main>
+      <WebSocketProvider>
+        <main>{children}</main>
+      </WebSocketProvider>
     </>
   );
 }

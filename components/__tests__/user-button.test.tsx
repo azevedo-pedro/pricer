@@ -11,9 +11,7 @@ jest.mock("next-auth/react", () => ({
 
 // Mock lucide-react icons
 jest.mock("lucide-react", () => ({
-  User: () => <div data-testid="user-icon">User Icon</div>,
-  Settings: () => <div data-testid="settings-icon">Settings Icon</div>,
-  LifeBuoy: () => <div data-testid="lifebuoy-icon">LifeBuoy Icon</div>,
+  Mail: () => <div data-testid="mail-icon">Mail Icon</div>,
   LogOut: () => <div data-testid="logout-icon">Logout Icon</div>,
 }));
 
@@ -41,35 +39,26 @@ describe("UserButton", () => {
     it("renders user avatar and name when authenticated", () => {
       render(<UserButton />);
 
-      expect(screen.getAllByText("John Doe")[0]).toBeInTheDocument();
+      expect(screen.getByText("John Doe")).toBeInTheDocument();
     });
 
-    it("shows dropdown menu when avatar is clicked", async () => {
+    it("shows email in dropdown menu when avatar is clicked", async () => {
       render(<UserButton />);
 
-      const trigger = screen.getAllByText("John Doe")[0].parentElement;
+      const trigger = screen.getByText("John Doe").closest("div");
       expect(trigger).toBeInTheDocument();
       if (trigger) {
         await userEvent.click(trigger);
       }
 
-      expect(screen.getByText("Minha Conta")).toBeInTheDocument();
-      expect(screen.getByText("Perfil")).toBeInTheDocument();
-      expect(screen.getByText("Configurações")).toBeInTheDocument();
-      expect(screen.getByText("Suporte")).toBeInTheDocument();
-      expect(screen.getByText("Sair")).toBeInTheDocument();
-    });
-
-    it("shows avatar fallback when image fails to load", () => {
-      render(<UserButton />);
-
-      expect(screen.getAllByText("John Doe")).toHaveLength(1); // One in header, one in fallback
+      expect(screen.getByTestId("mail-icon")).toBeInTheDocument();
+      expect(screen.getByText("john@example.com")).toBeInTheDocument();
     });
 
     it("calls signOut when logout button is clicked", async () => {
       render(<UserButton />);
 
-      const trigger = screen.getAllByText("John Doe")[0].parentElement;
+      const trigger = screen.getByText("John Doe").closest("div");
       if (trigger) {
         await userEvent.click(trigger);
       }
@@ -80,33 +69,22 @@ describe("UserButton", () => {
       expect(signOut).toHaveBeenCalledTimes(1);
     });
 
-    it("renders disabled menu items correctly", async () => {
+    it("renders logout icon correctly", async () => {
       render(<UserButton />);
 
-      const trigger = screen.getAllByText("John Doe")[0].parentElement;
+      const trigger = screen.getByText("John Doe").closest("div");
       if (trigger) {
         await userEvent.click(trigger);
       }
-      const profileItem = screen.getByText("Perfil").closest("div");
-      const settingsItem = screen.getByText("Configurações").closest("div");
-      const supportItem = screen.getByText("Suporte").closest("div");
-      expect(profileItem).toHaveAttribute("aria-disabled", "true");
-      expect(settingsItem).toHaveAttribute("aria-disabled", "true");
-      expect(supportItem).toHaveAttribute("aria-disabled", "true");
+
+      expect(screen.getByTestId("logout-icon")).toBeInTheDocument();
     });
 
-    it("renders all icons correctly", async () => {
+    it("has correct hover cursor style", () => {
       render(<UserButton />);
 
-      const trigger = screen.getAllByText("John Doe")[0].parentElement;
-      if (trigger) {
-        await userEvent.click(trigger);
-      }
-
-      expect(screen.getByTestId("user-icon")).toBeInTheDocument();
-      expect(screen.getByTestId("settings-icon")).toBeInTheDocument();
-      expect(screen.getByTestId("lifebuoy-icon")).toBeInTheDocument();
-      expect(screen.getByTestId("logout-icon")).toBeInTheDocument();
+      const button = screen.getByText("John Doe").closest("div");
+      expect(button).toHaveClass("hover:cursor-pointer");
     });
   });
 
@@ -120,8 +98,8 @@ describe("UserButton", () => {
 
     it("does not render anything when unauthenticated", () => {
       render(<UserButton />);
-
       expect(screen.queryByAltText("Profile photo")).not.toBeInTheDocument();
+      expect(screen.queryByText("John Doe")).not.toBeInTheDocument();
     });
   });
 
@@ -135,23 +113,27 @@ describe("UserButton", () => {
 
     it("does not render anything while loading", () => {
       render(<UserButton />);
-
       expect(screen.queryByAltText("Profile photo")).not.toBeInTheDocument();
+      expect(screen.queryByText("John Doe")).not.toBeInTheDocument();
     });
   });
 
   describe("Error Handling", () => {
-    it("handles signOut rejection gracefully", async () => {
-      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
-      (signOut as jest.Mock).mockRejectedValueOnce(new Error("SignOut failed"));
+    beforeEach(() => {
       (useSession as jest.Mock).mockReturnValue({
         data: mockProfile,
         status: "authenticated",
       });
+    });
+
+    it("handles signOut rejection gracefully", async () => {
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation();
+      const mockError = new Error("SignOut failed");
+      (signOut as jest.Mock).mockRejectedValueOnce(mockError);
 
       render(<UserButton />);
 
-      const trigger = screen.getAllByText("John Doe")[0].parentElement;
+      const trigger = screen.getByText("John Doe").closest("div");
       if (trigger) {
         await userEvent.click(trigger);
       }
@@ -160,9 +142,37 @@ describe("UserButton", () => {
       await userEvent.click(logoutButton);
 
       expect(signOut).toHaveBeenCalled();
-      expect(consoleSpy).toHaveBeenCalled();
+      expect(consoleSpy).toHaveBeenCalledWith("Failed to sign out:", mockError);
 
       consoleSpy.mockRestore();
+    });
+  });
+
+  describe("Component Layout", () => {
+    beforeEach(() => {
+      (useSession as jest.Mock).mockReturnValue({
+        data: mockProfile,
+        status: "authenticated",
+      });
+    });
+
+    it("renders with correct layout classes", () => {
+      render(<UserButton />);
+
+      const container = screen.getByText("John Doe").closest("div");
+      expect(container).toHaveClass("flex", "justify-center", "items-center");
+    });
+
+    it("renders user name with correct text styles", () => {
+      render(<UserButton />);
+
+      const nameElement = screen.getByText("John Doe").closest("h2");
+      expect(nameElement).toHaveClass(
+        "text-white",
+        "text-base",
+        "ml-2",
+        "leading-5"
+      );
     });
   });
 });

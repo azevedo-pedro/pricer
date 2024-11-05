@@ -35,18 +35,16 @@ export const fetchTickers = async (): Promise<TickerProps[]> => {
 };
 
 // Add a new ticker to localStorage
-export const addTicker = async (
-  ticker: Omit<TickerProps, "id">
-): Promise<TickerProps> => {
+export const addTicker = async (ticker: TickerProps): Promise<TickerProps> => {
   const storedTickers = localStorage.getItem("tickers");
   const tickers: TickerProps[] = storedTickers
     ? (JSON.parse(storedTickers) as TickerProps[])
     : [];
 
   // Check if the ticker with the same id already exists to prevent duplicates
-  const existingTicker = tickers.find((t) => t.ticker === ticker.ticker);
+  const existingTicker = tickers.find((t) => t.id === ticker.id);
   if (existingTicker) {
-    throw new Error(`Ativo com esse nome "${ticker.ticker}" já existe.`);
+    throw new Error(`Ativo com esse nome "${ticker.id}" já existe.`);
   }
 
   // Add new ticker with a unique id
@@ -68,41 +66,29 @@ export const updateTicker = async (
 
   // Find index of the ticker with the provided id
   const existingTickerIndex = tickers.findIndex(
-    (t) => t.ticker === ticker.ticker
+    (t) => t.ticker === ticker?.ticker
   );
+
   if (existingTickerIndex === -1) {
-    throw new Error(`Ticker with id "${ticker.id}" does not exist.`);
+    throw new Error(`Ticker with id "${ticker.ticker}" does not exist.`);
   }
-  const formaterCurrency = (currency: number) => {
-    const formatedCurrency = new Intl.NumberFormat("pt-BR", {
-      maximumSignificantDigits: 4,
-    }).format(currency);
-    return `R$ ${formatedCurrency}`;
-  };
-  const formaterPerCent = (currency: number) => {
-    const formatedCurrency = new Intl.NumberFormat("pt-BR", {
-      maximumSignificantDigits: 4,
-    }).format(currency);
-    return `${formatedCurrency} %`;
-  };
+
   // Update the existing ticker
-  const tratedTicker: TickerProps = {
-    ...ticker,
-    compra: formaterCurrency(Number(ticker.compra)),
-    venda: formaterCurrency(Number(ticker.compra)),
-    preco: formaterCurrency(Number(ticker.compra)),
-    preco_abertura: formaterCurrency(Number(ticker.preco_abertura)),
-    variacao: formaterPerCent(Number(ticker.variacao)),
-    variacao_12m: formaterPerCent(Number(ticker.variacao_12m)),
-    total_price: formaterCurrency(
-      Number(ticker.preco) * Number(tickers[existingTickerIndex].qtd)
-    ),
-  };
-  tickers[existingTickerIndex] = {
-    ...tickers[existingTickerIndex],
-    ...tratedTicker,
-  };
-  localStorage.setItem("tickers", JSON.stringify(tickers));
+  function updateObjectsWithSameTicker(data, ticker, updates) {
+    return data.map((obj) => {
+      if (obj.ticker === ticker) {
+        return { ...obj, ...updates };
+      }
+      return obj;
+    });
+  }
+
+  const newTickers = updateObjectsWithSameTicker(
+    tickers,
+    ticker.ticker,
+    ticker
+  );
+  localStorage.setItem("tickers", JSON.stringify(newTickers));
   return ticker;
 };
 
@@ -128,4 +114,36 @@ export const getTickerById = async (id: string | null) => {
 
   const tickerId = tickers.filter((t) => t.id?.includes(id || ""));
   return tickerId[0];
+};
+
+export const updateTickerQtd = async (
+  ticker: Pick<TickerProps, "ticker" | "qtd" | "id">
+): Promise<TickerProps> => {
+  const storedTickers = localStorage.getItem("tickers");
+  const tickers: TickerProps[] = storedTickers
+    ? (JSON.parse(storedTickers) as TickerProps[])
+    : [];
+
+  // Find index of the ticker with the provided ticker name
+  const existingTickerIndex = tickers.findIndex((t) => t.id === ticker.id);
+
+  if (existingTickerIndex === -1) {
+    throw new Error(`Ticker "${ticker.id}" does not exist.`);
+  }
+
+  // Preserve existing ticker data and only update ticker and qtd
+  const existingTicker = tickers[existingTickerIndex];
+  const updatedTicker = {
+    ...existingTicker,
+    ticker: ticker.ticker,
+    qtd: ticker.qtd,
+  };
+
+  // Update the ticker in the array
+  tickers[existingTickerIndex] = updatedTicker;
+
+  // Save to localStorage
+  localStorage.setItem("tickers", JSON.stringify(tickers));
+
+  return updatedTicker;
 };

@@ -4,13 +4,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, Settings, LifeBuoy, LogOut } from "lucide-react";
+import { LogOut, Mail } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 
 export function UserButton() {
@@ -38,24 +36,11 @@ export function UserButton() {
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem disabled>
-            <User />
-            <span>Perfil</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem disabled>
-            <Settings />
-            <span>Configurações</span>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+        <DropdownMenuLabel className="flex space-x-4 items-center">
+          <Mail />
+          <span>{profile?.user.email}</span>
+        </DropdownMenuLabel>
 
-        <DropdownMenuItem disabled>
-          <LifeBuoy />
-          <span>Suporte</span>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut}>
           <LogOut />
           <span>Sair</span>

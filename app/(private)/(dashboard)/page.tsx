@@ -3,40 +3,37 @@
 import { DataTable } from "@/components/data-table";
 import { Card, CardContent } from "@/components/ui/card";
 import { columns } from "./columns";
-import { useNewPrice } from "@/features/price/hooks/use-new-price";
+import { useDeletePrice } from "@/features/price/api/use-delete-price";
+
 import { useGetPrices } from "@/features/price/api/use-get-price";
-import useWebSocket from "react-use-websocket";
 import { useEffect } from "react";
-import { useEditPrice } from "@/features/price/api/use-edit-price";
-import { TickerProps } from "@/features/price/api/api";
+import { useEditPrices } from "@/features/price/api/use-edit-prices";
+import { useWebSocketClient } from "@/providers/websocket-provider";
+import { useCreatePrice } from "@/features/price/api/use-create-price";
 
 export default function DashboardPage() {
-  const { sendMessage, lastJsonMessage } = useWebSocket<TickerProps>(
-    "ws://35.222.114.197:8765",
-    { onClose: () => console.log("connection close") }
-  );
-
-  const newPrice = useNewPrice();
   const prices = useGetPrices();
-  const editMutation = useEditPrice();
+  const editMutation = useEditPrices();
+  const deletePrices = useDeletePrice();
+  const createPrice = useCreatePrice();
+
   const pricesData = prices.data || [];
+
+  const { lastJsonMessage, subscribeToTicker, unsubscribeFromTicker } =
+    useWebSocketClient();
+
+  const onDelete = (row: any[]) => {
+    const ids = row.map((r) => r.original.id);
+    row.forEach((r) => unsubscribeFromTicker(r.original.ticker));
+    deletePrices.mutate(ids);
+  };
+
   useEffect(() => {
     if (lastJsonMessage !== null) {
-      const existingTickerIndex = pricesData.findIndex(
-        (t) => t.ticker === lastJsonMessage?.ticker
-      );
-      if (existingTickerIndex === -1) {
-        return;
-      }
       editMutation.mutate(lastJsonMessage);
     }
+    // filteredPrices.forEach(({ ticker }) => unsubscribeFromTicker(ticker));
   }, [lastJsonMessage]);
-
-  useEffect(() => {
-    prices.data?.forEach((ticker) =>
-      sendMessage(`sqt ${ticker.ticker}`, false)
-    );
-  }, [prices.data?.length]);
 
   return (
     <div className="min-h-screen">
@@ -47,7 +44,9 @@ export default function DashboardPage() {
             columns={columns}
             data={pricesData}
             disabled={false}
-            onOpen={newPrice.onOpen}
+            onDelete={onDelete}
+            mutation={createPrice}
+            subscribeToTicker={subscribeToTicker}
           />
         </CardContent>
       </Card>

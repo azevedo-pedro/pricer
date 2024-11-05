@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
-
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -23,29 +20,30 @@ import {
 } from "@/components/ui/table";
 
 import { CardHeader } from "@/components/ui/card";
-
 import { useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { Plus, Trash } from "lucide-react";
-import { useDeletePrice } from "@/features/price/api/use-delete-price";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   filterKey: string;
   disabled?: boolean;
-  onOpen: () => void;
+  onDelete: (row: any[]) => void;
+  mutation: any;
+  subscribeToTicker: (ticker: string) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  onOpen,
+  onDelete,
+  mutation,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
-  const deletePrices = useDeletePrice();
+
   const table = useReactTable({
     data,
     columns,
@@ -62,52 +60,51 @@ export function DataTable<TData, TValue>({
       rowSelection,
     },
   });
-  const onDelete = (row: any[]) => {
-    const ids = row.map((r) => r.original.id);
-    deletePrices.mutate(ids);
-  };
 
   return (
     <div>
       <CardHeader className="flex-row h-[60px] bg-[#D0D0D0] pt-1">
-        <Button className="font-normal mt-1.5 ml-2" onClick={() => onOpen()}>
+        <Button
+          className="font-normal mt-1.5 ml-2 text-base "
+          onClick={() => mutation.mutate({ ticker: "", qtd: "" })}
+        >
           <Plus />
           Cotação
         </Button>
-        <Button
-          variant="secondary"
-          className="font-normal ml-2"
-          onClick={async () => {
-            onDelete(table.getFilteredSelectedRowModel().rows);
-            table.resetRowSelection();
-          }}
-        >
-          <Trash className="size-4 mr-2" />
-          Excluir{" "}
-          {table.getFilteredSelectedRowModel().rows.length > 0 &&
-            `(${table.getFilteredSelectedRowModel().rows.length})`}
-        </Button>
+        {table.getFilteredSelectedRowModel().rows.length > 0 && (
+          <Button
+            variant="secondary"
+            className="font-normal ml-2 text-base"
+            onClick={async () => {
+              onDelete(table.getFilteredSelectedRowModel().rows);
+              table.resetRowSelection();
+            }}
+          >
+            <Trash className="size-4 mr-2" />
+            Excluir{" "}
+            {table.getFilteredSelectedRowModel().rows.length > 0 &&
+              `(${table.getFilteredSelectedRowModel().rows.length})`}
+          </Button>
+        )}
       </CardHeader>
       <div className="rounded-md border">
-        <Table>
+        <Table className="table-auto">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead
-                      key={header.id}
-                      className="bg-[#E3E3E3] text-center"
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    className="bg-[#E3E3E3] text-center border-l border-[#D0D0D0] pl-0"
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
@@ -115,26 +112,18 @@ export function DataTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
-                  className="even:bg-[#E3E3E3] odd:bg-[#F7F8F8] text-center"
+                  className="even:bg-[#E3E3E3] odd:bg-[#F7F8F8] text-center "
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {cell.id.includes("total_price") ? (
-                        <div className="font-bold">
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </div>
-                      ) : (
-                        <>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </>
+                    <TableCell
+                      key={cell.id}
+                      className="border-l border-[#D0D0D0] pl-0 min-w-11 text-base font-normal"
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
@@ -156,3 +145,5 @@ export function DataTable<TData, TValue>({
     </div>
   );
 }
+
+export default DataTable;
