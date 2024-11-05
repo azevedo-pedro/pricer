@@ -17,9 +17,7 @@
     "type-check": "tsc --noEmit",
     "type-check:watch": "tsc --noEmit --watch",
     "validate": "yarn lint && yarn format:check && yarn type-check && yarn test",
-    "prepare": "husky",
-    "db:generate": "drizzle-kit generate:pg --schema db/schema.ts --out=./drizzle",
-    "db:migrate": "npx tsx ./scripts/migrate.ts"
+    "prepare": "husky"
   },
   "husky": {
     "hooks": {

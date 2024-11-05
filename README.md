@@ -1,16 +1,24 @@
 # Pricer
 
-A clean and modern admin dashboard built with Next.js 14+ and Tailwind CSS, featuring a secure login page and internal dashboard view.
+A real-time active investment monitoring platform offers investors an advanced way to track and manage their portfolio in real time. Through this platform, users can view the performance of different asset classes—such as stocks, real estate funds, cryptocurrencies, commodities, and fixed income—consolidating all information in a single, user-friendly interface.
 
-## Features
+### Key Features
 
-- 🔐 Secure authentication system
-- 📊 Clean dashboard interface
-- 🎨 Modern UI with Tailwind CSS
-- 📱 Fully responsive design
-- 🚀 Server-side rendering with Next.js
-- 🔄 Built-in API routes
-- 📦 Shadcn/ui components integration
+1. **Real-Time Monitoring**: The platform collects and displays market data in real time, enabling investors to view price and volume fluctuations of their assets within seconds. This allows users to make quick decisions, reacting to market events swiftly and accurately.
+
+2. **Portfolio and Profitability Analysis**: The system provides a detailed view of the portfolio, allowing investors to monitor the individual performance of each asset and the overall profitability of their investments. Interactive charts and customized indicators help interpret data and identify trends.
+
+### Benefits of a Real-Time Monitoring Platform
+
+- **Faster, More Informed Decisions**: With data updated every second, investors gain confidence in making informed decisions, minimizing risks.
+
+- **Risk Reduction**: With risk alerts and volatility monitoring features, the platform helps protect portfolios against unexpected losses.
+
+- **Centralized Access to Various Assets**: By consolidating multiple assets and classes in one place, the platform makes it easy to fully monitor a portfolio, even if investors hold assets in different brokerages.
+
+- **Greater Control and Efficiency**: Automating data collection and report generation simplifies tracking and analysis, giving investors more time to focus on strategy and optimization.
+
+A real-time active investment monitoring platform is an essential tool for investors seeking to maximize returns and minimize risks in a dynamic market. With it, users can stay ahead, responding intelligently and swiftly to market changes.
 
 ## Tech Stack
 
@@ -42,7 +50,7 @@ yarn install
 3. Set up environment variables:
 
 ```bash
-cp .env.example .env.local
+cp .env.local.example .env.local
 ```
 
 4. Start the development server:
@@ -59,7 +67,6 @@ yarn dev
 
 ```
 pricer
-├── README.md
 ├── app
 │   ├── (auth)
 │   │   └── sign-in
@@ -67,7 +74,8 @@ pricer
 │   │           └── page.tsx
 │   ├── (private)
 │   │   ├── (dashboard)
-│   │   │   ├── layout.tsx
+│   │   │   ├── actions.tsx
+│   │   │   ├── columns.tsx
 │   │   │   └── page.tsx
 │   │   └── layout.tsx
 │   ├── api
@@ -80,27 +88,50 @@ pricer
 ├── components
 │   ├── __tests__
 │   │   ├── auth-form.test.tsx
+│   │   ├── data-tables.test.tsx
 │   │   ├── header.test.tsx
 │   │   └── user-button.test.tsx
 │   ├── auth-form.tsx
+│   ├── data-table.tsx
 │   ├── header.tsx
 │   ├── ui
 │   │   ├── avatar.tsx
 │   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   ├── checkbox.tsx
+│   │   ├── dialog.tsx
 │   │   ├── dropdown-menu.tsx
 │   │   ├── form.tsx
 │   │   ├── input.tsx
 │   │   ├── label.tsx
-│   │   └── sonner.tsx
+│   │   ├── sheet.tsx
+│   │   ├── sonner.tsx
+│   │   └── table.tsx
 │   └── user-button.tsx
 ├── components.json
+├── features
+│   └── price
+│       ├── api
+│       │   ├── api.ts
+│       │   ├── use-create-price.ts
+│       │   ├── use-delete-price.ts
+│       │   ├── use-edit-price.ts
+│       │   ├── use-edit-prices.ts
+│       │   ├── use-get-price-id.ts
+│       │   └── use-get-price.ts
+│       ├── components
+│       └── hooks
+│           ├── use-new-price.tsx
+│           └── use-open-price.tsx
 ├── hooks
-│   └── useProfile.tsx
+│   ├── use-confirm.tsx
+│   └── use-profile.tsx
 ├── jest.config.ts
 ├── jest.setup.ts
 ├── lib
 │   ├── __tests__
-│   │   └── api.integration.test.ts
+│   │   ├── api.integration.test.ts
+│   │   └── utils.test.ts
 │   ├── api.ts
 │   ├── test-utils.tsx
 │   └── utils.ts
@@ -111,13 +142,12 @@ pricer
 ├── postcss.config.mjs
 ├── providers
 │   ├── auth-provider.tsx
-│   └── query-provider.tsx
+│   ├── query-provider.tsx
+│   └── websocket-provider.tsx
 ├── public
 │   ├── logo.svg
 │   └── profile.png
 ├── tailwind.config.ts
-├── tests
-├── tests-examples
 ├── tsconfig.json
 ├── tsconfig.tsbuildinfo
 ├── types
